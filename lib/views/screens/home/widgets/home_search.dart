@@ -52,7 +52,9 @@ class HomeSearch extends StatelessWidget {
                     backgroundColor: AppColors.appColor,
                     child: Icon(Icons.sort_by_alpha_sharp , color: Colors.white,),
                   ),
-                ) : const Center(child: CircularProgressIndicator())
+                ) : const Center(child: Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: CircularProgressIndicator(color: AppColors.appColor)))
               ]
               ),
             ),

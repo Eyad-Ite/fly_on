@@ -8,4 +8,6 @@ class ApiPaths {
   static const String searchHomeTripsUrl = 'trip/search';
   static const String countryDetailsUrl = 'country/details';
   static const String tripDetailsUrl = 'trip/details';
+  static const String addReviewUrl = 'comment/add';
+  static const String deleteReviewUrl = 'comment/delete';
 }

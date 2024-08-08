@@ -1,14 +1,13 @@
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fly_on/constants/colors.dart';
 import 'package:fly_on/controllers/trip_details_controller.dart';
-import 'package:fly_on/helper/app_routes.dart';
 import 'package:fly_on/views/general_widgets/general_button.dart';
-import 'package:fly_on/views/screens/trip_details/reviews_sreen.dart';
+import 'package:fly_on/views/screens/trip_details/reviews_screen.dart';
 import 'package:fly_on/views/screens/trip_details/widgets/add_review_dialog.dart';
 import 'package:fly_on/views/screens/trip_details/widgets/reviews_item.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class TripDetails extends StatefulWidget {
   final String tripId;
@@ -48,18 +47,16 @@ class _TripDetailsState extends State<TripDetails> {
             children: [
               Stack(
                 children: [
-                  Container(
+                  SizedBox(
                     width: Get.mediaQuery.size.width,
                     child: CarouselSlider(
                       items: tripDetails.photos!.map((e) {
-                        // Print the URL to debug
-                        print(e); // Ensure 'e' contains the correct URL
                         return Center(
-                          child: Image.network('https://th.bing.com/th/id/OIP.QZRubaNnlKSuOBwOeCwlRQHaD4?rs=1&pid=ImgDetMain' ,
+                          child: Image.network(e.photo!,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
-                              return Center(
-                                child: Text('Failed to load image'), // Display error message if image fails to load
+                              return const Center(
+                                child: Text('Failed to load image'),
                               );
                             },
                           ),
@@ -105,10 +102,15 @@ class _TripDetailsState extends State<TripDetails> {
                       children: [
                         Expanded(
                           child: Text(
-                            tripDetails.name ?? '',
+                            tripDetails.name!,
                             style: TextStyle(fontSize: 16, fontFamily: 'Prompt'),
                           ),
                         ),
+                        Text(
+                          "${tripDetails.offerRatio!}%",
+                          style: const TextStyle(fontWeight: FontWeight.bold,color: AppColors.appColor),
+                        ),
+                        const SizedBox(width: 10),
                         InkWell(
                           onTap: () => Get.back(),
                           child: Container(
@@ -126,23 +128,37 @@ class _TripDetailsState extends State<TripDetails> {
                                 ),
                               ],
                             ),
-                            child: const Icon(Icons.favorite, color: Colors.red),
+                            child: Icon(tripDetails.favourite == 1 ?  Icons.favorite : Icons.favorite_border, color: Colors.red),
                           ),
                         ),
                       ],
                     ),
-                    // TODO: Replace with dynamic rating
+                    const SizedBox(height: 10),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.star, size: 20, color: Colors.yellow.shade700),
-                        Icon(Icons.star, size: 20, color: Colors.yellow.shade700),
-                        Icon(Icons.star, size: 20, color: Colors.yellow.shade700),
-                        Icon(Icons.star, size: 20, color: Colors.yellow.shade700),
-                        Icon(Icons.star_border, size: 20, color: Colors.yellow.shade700),
+                        Text(
+                          "New price: " + tripDetails.price!.toString(),
+                          style: TextStyle(fontWeight: FontWeight.bold,color: AppColors.appColor),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Old price: " + tripDetails.oldPrice!.toString(),
+                          style: TextStyle(decoration: TextDecoration.lineThrough,fontSize: 13),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
-                    const SizedBox(height: 20),
+                    Text(
+                      "Start date: " + DateFormat('dd-MM-yyyy').format(DateTime.parse(tripDetails.startDate!.toString())),
+                      style: TextStyle(decoration: TextDecoration.none),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      "End date: " + DateFormat('dd-MM-yyyy').format(DateTime.parse(tripDetails.endDate!.toString())),
+                      style: TextStyle(decoration: TextDecoration.none),
+                    ),
+                    const SizedBox(height: 10),
                     const Text(
                       "Description",
                       style: TextStyle(
@@ -154,12 +170,12 @@ class _TripDetailsState extends State<TripDetails> {
                         decoration: TextDecoration.none,
                       ),
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 10),
                     Text(
                       tripDetails.bio ?? '',
                       style: TextStyle(decoration: TextDecoration.none),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     const Text(
                       "Reviews",
                       style: TextStyle(
@@ -171,18 +187,20 @@ class _TripDetailsState extends State<TripDetails> {
                         decoration: TextDecoration.none,
                       ),
                     ),
+                    tripDetails.reviews!.isNotEmpty ?
                     ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.zero,
                       shrinkWrap: true,
                       itemCount: tripDetails.reviews!.length > 3 ? 3 : tripDetails.reviews!.length,
                       itemBuilder: (context, index) {
                         final review = tripDetails.reviews![index];
-                        return ReviewsItem(index: index,reviewsList:tripDetails.reviews!,
+                        return ReviewsItem(index: index,tripId: tripDetails.id.toString(),reviewsList:tripDetails.reviews!,
 
                         );
                       },
-                    ),
-
+                    ) : const Text("No reviews yet.. start adding review"),
+                    tripDetails.reviews!.isEmpty ? const Center() :
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -195,7 +213,7 @@ class _TripDetailsState extends State<TripDetails> {
                           ),
                           color: AppColors.whiteColor,
                           onPressed: () {
-                            Get.to(ReviewsScreen(reviewsList: tripDetails.reviews,));
+                            Get.to(ReviewsScreen(reviewsList: tripDetails.reviews,tripId: tripDetails.id.toString()));
                           },
                           icon: const Text(
                             "View all",
@@ -209,14 +227,60 @@ class _TripDetailsState extends State<TripDetails> {
                       ],
                     ),
                     const SizedBox(height: 15),
+                    (tripDetails.inProgress == true && tripDetails.inReserve == 1) ?
                     GeneralButton(
                       onTap: () {
-                        Get.dialog(AddReviewDialog(), barrierDismissible: true);
+                        Get.dialog(AddReviewDialog(tripId: tripDetails.id.toString()), barrierDismissible: true);
                       },
                       text: "Add review",
                       width: Get.mediaQuery.size.width,
+                    ) : const Center(),
+                    SizedBox(height: (tripDetails.inProgress == true && tripDetails.inReserve == 1) ? 20 : 10),
+                    tripDetails.days!.isNotEmpty ?
+                    const Text(
+                      "Days",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Prompt',
+                        letterSpacing: 0.6,
+                        decoration: TextDecoration.none,
+                      ),
+                    ) : const Center(),
+                    const SizedBox(height: 10),
+                    tripDetails.days!.isNotEmpty ?
+                    ListView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      itemCount: tripDetails.days!.length,
+                      itemBuilder: (context, index) {
+                        return Text(DateFormat('dd-MM-yyyy').format(DateTime.parse(tripDetails.days![index].date.toString())),
+                            style: TextStyle(color: Colors.red));
+                      },
+                    ) : const Center(),
+                    SizedBox(height: tripDetails.days!.isNotEmpty ? 10 : 0),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(22),
+                        color: Colors.white.withOpacity(0.9),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text("Number of available places",
+                              style: TextStyle(fontWeight: FontWeight.bold,color: AppColors.appColor),
+                            ),
+                          ),
+                          Text(
+                            tripDetails.numberOfAvailablePlaces!.toString(),
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 20),
                   ],
                 ),
               ),

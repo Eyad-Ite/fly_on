@@ -9,4 +9,12 @@ class TripDetailsService {
     return await Api().post(url: ApiPaths.baseUrl + ApiPaths.tripDetailsUrl,body: {"id" : tripId});
   }
 
+  Future<Response> addReview(String tripId,String review) async {
+    return await Api().post(url: ApiPaths.baseUrl + ApiPaths.addReviewUrl,body: {"trip_id" : tripId,"comment": review});
+  }
+
+  Future<Response> deleteReview(String reviewId) async {
+    return await Api().post(url: ApiPaths.baseUrl + ApiPaths.deleteReviewUrl,body: {"id" : reviewId});
+  }
+
 }

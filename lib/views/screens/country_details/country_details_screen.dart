@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fly_on/constants/colors.dart';
 import 'package:fly_on/controllers/country_controller.dart';
+import 'package:fly_on/helper/app_routes.dart';
 import 'package:fly_on/views/general_widgets/text_with_icon.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
@@ -94,7 +95,7 @@ class _CountryDetailsScreenState extends State<CountryDetailsScreen> {
                               text: "Trips",
                               isIcon: false,
                               onTap: () {
-                                // todo
+                                Get.toNamed(AppRoutes.tripsAndFacilities, parameters: {'type': "trips"});
                               }
                           ),
                           const SizedBox(height: 10),
@@ -110,7 +111,7 @@ class _CountryDetailsScreenState extends State<CountryDetailsScreen> {
                               text: "Facilities",
                               isIcon: false,
                               onTap: () {
-                                // todo
+                                Get.toNamed(AppRoutes.tripsAndFacilities, parameters: {'type': "facilities"});
                               }
                           ),
                           const SizedBox(height: 10),

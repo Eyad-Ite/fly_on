@@ -5,5 +5,6 @@ class AppRoutes {
   static const tripDetails = '/tripDetails';
   static const reviews = '/reviews';
   static const search = '/search' ;
+  static const tripsAndFacilities = '/tripsAndFacilities' ;
 
 }

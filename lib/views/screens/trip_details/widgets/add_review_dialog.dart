@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fly_on/constants/colors.dart';
+import 'package:fly_on/controllers/trip_details_controller.dart';
 import 'package:fly_on/views/general_widgets/general_button.dart';
 import 'package:get/get.dart';
 
 class AddReviewDialog extends StatelessWidget{
-  const AddReviewDialog({super.key});
+
+  final String tripId;
+
+  AddReviewDialog({required this.tripId});
+
+  TextEditingController reviewController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,25 +31,10 @@ class AddReviewDialog extends StatelessWidget{
               ],
             ),
             const SizedBox(height: 10),
-            // todo later (add package)
-            Row(
-              children: [
-                Icon(Icons.star, size:  30,
-                    color: Colors.yellow.shade700),
-                Icon(Icons.star, size:  30,
-                    color: Colors.yellow.shade700),
-                Icon(Icons.star, size:  30,
-                    color: Colors.yellow.shade700),
-                Icon(Icons.star, size:  30,
-                    color: Colors.yellow.shade700),
-                Icon(Icons.star_border, size:  30,
-                    color: Colors.yellow.shade700),
-              ],
-            ),
-            const SizedBox(height: 10),
             TextFormField(
                 cursorColor: AppColors.appColor,
                 maxLines: 3,
+                controller: reviewController,
                 decoration: InputDecoration(
                   hintText: "add your review",
                     enabledBorder: OutlineInputBorder(
@@ -59,7 +50,13 @@ class AddReviewDialog extends StatelessWidget{
             const SizedBox(height: 15),
             GeneralButton(
                 onTap: () {
-                  // todo add review api later
+                  Get.find<TripDetailsController>().addReview(tripId, reviewController.text).then((value) {
+                    if(value == true) {
+                      Get.back();
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  });
                 },
                 text: "Done", width: Get.mediaQuery.size.width),
           ],

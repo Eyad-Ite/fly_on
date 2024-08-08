@@ -55,7 +55,7 @@ class Api {
       return _response;
     }
     else {
-      throw Exception('You have error in the code  ${response.statusCode}');
+      return _response;
     }
   }
 
