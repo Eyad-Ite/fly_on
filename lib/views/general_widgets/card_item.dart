@@ -33,8 +33,11 @@ class CardItem extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(22),
               onTap: () {
-                Get.toNamed(AppRoutes.tripDetails, parameters: {'id': index.toString()});
-                // Get.toNamed(AppRoutes.tripDetails);
+                if(type == "country trips" || type == "recommended" || type == "offers") {
+                  Get.toNamed(AppRoutes.tripDetails, parameters: {'id': index.toString()});
+                } else {
+                  Get.toNamed(AppRoutes.facilityDetails, parameters: {'id': index.toString()});
+                }
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -75,7 +78,8 @@ class CardItem extends StatelessWidget {
                         RatingBar.builder(
                           initialRating: tripsModel.rate!,
                           direction: Axis.horizontal,
-                          allowHalfRating: true,
+                          ignoreGestures: true,
+                          allowHalfRating: false,
                           itemCount: 5,
                           itemSize: 16,
                           itemBuilder: (context, _) => Icon(

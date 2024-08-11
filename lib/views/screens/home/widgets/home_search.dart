@@ -40,7 +40,6 @@ class HomeSearch extends StatelessWidget {
                           }
                           searchController.clear();
                         });
-
                       },
                   )
                 ),

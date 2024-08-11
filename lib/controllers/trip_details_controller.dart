@@ -51,6 +51,28 @@ class TripDetailsController extends GetxController {
     return true;
   }
 
+  Future<bool> addAppointment(String tripId,String numberOfPlaces) async {
+    Response response = await tripDetailsService.addAppointment(tripId,numberOfPlaces);
+    if(response.statusCode == 200) {
+      Get.snackbar(response.body["message"],"your wallet is ${response.body["data"]["\$current_wallet"]}",padding: EdgeInsets.zero);
+      return true;
+    } else if (response.statusCode == 401) {
+      Get.snackbar("You have login first","",backgroundColor: Colors.red.withOpacity(0.7),colorText: AppColors.whiteColor,
+          margin: EdgeInsets.symmetric(horizontal: 10),padding: EdgeInsets.only(top: 15,bottom: 0,left: 15,right: 15));
+      return false;
+    } else if (response.statusCode == 422) {
+      if(response.body["data"] == null) {
+        Get.snackbar(response.body["message"],"",backgroundColor: Colors.red.withOpacity(0.7),colorText: AppColors.whiteColor,
+            margin: EdgeInsets.symmetric(horizontal: 10),padding: EdgeInsets.only(top: 15,bottom: 0,left: 15,right: 15));
+        return false;
+      } else {
+        Get.snackbar(response.body["data"]["number_of_places"],"",backgroundColor: Colors.red.withOpacity(0.7),colorText: AppColors.whiteColor,
+            margin: EdgeInsets.symmetric(horizontal: 10),padding: EdgeInsets.only(top: 15,bottom: 0,left: 15,right: 15));
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
 

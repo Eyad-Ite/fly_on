@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fly_on/constants/colors.dart';
 import 'package:fly_on/controllers/country_controller.dart';
-import 'package:fly_on/views/general_widgets/text_with_icon.dart';
+import 'package:fly_on/helper/app_routes.dart';
 import 'package:get/get.dart';
-import 'package:photo_view/photo_view.dart';
-import '../../general_widgets/general_list_view.dart';
 
 class TripsAndFacilitiesScreen extends StatefulWidget {
 
@@ -29,6 +27,10 @@ class _TripsAndFacilitiesScreenState extends State<TripsAndFacilitiesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.appColor,
+        iconTheme: const IconThemeData(color: AppColors.whiteColor),
+      ),
       body: GetBuilder<CountryController>(builder: (countryController) {
         final list = widget.type == "trips" ? countryController.countryDetails!.countryDetailsInfo!.trips! : countryController.countryDetails!.countryDetailsInfo!.facilities!;
       
@@ -49,7 +51,11 @@ class _TripsAndFacilitiesScreenState extends State<TripsAndFacilitiesScreen> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(22),
                       onTap: () {
-                        // Get.toNamed(AppRoutes.tripDetails, parameters: {'id': trip.id.toString()});
+                        if( widget.type == "trips") {
+                          Get.toNamed(AppRoutes.tripDetails, parameters: {'id': list[index].id.toString()});
+                        } else {
+                          Get.toNamed(AppRoutes.facilityDetails, parameters: {'id': list[index].id.toString()});
+                        }
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -81,6 +87,7 @@ class _TripsAndFacilitiesScreenState extends State<TripsAndFacilitiesScreen> {
                                     initialRating: list[index].rate!,
                                     direction: Axis.horizontal,
                                     allowHalfRating: true,
+                                    ignoreGestures: true,
                                     itemCount: 5,
                                     itemSize: 16,
                                     itemBuilder: (context, _) => Icon(

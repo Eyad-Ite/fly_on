@@ -5,7 +5,6 @@ import 'package:fly_on/helper/app_routes.dart';
 import 'package:fly_on/views/general_widgets/custom_appbar.dart';
 import 'package:fly_on/views/general_widgets/text_with_icon.dart';
 import 'package:fly_on/views/general_widgets/general_list_view.dart';
-import 'package:fly_on/views/screens/country_details/country_details_screen.dart';
 import 'package:fly_on/views/screens/home/widgets/home_search.dart';
 import 'package:get/get.dart';
 

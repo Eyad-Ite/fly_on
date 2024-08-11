@@ -12,7 +12,7 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomeController homeController = Get.put(HomeController(homeService: HomeService()));
+    final HomeController homeController = Get.put(HomeController(homeService: HomeService()) , permanent: true);
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +44,7 @@ class SearchScreen extends StatelessWidget {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(22),
                             onTap: () {
-                              Get.toNamed(AppRoutes.tripDetails, parameters: {'id': trip.id.toString()});
+                              Get.toNamed(AppRoutes.tripDetails, parameters: {'id': trip.id!.toString()});
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),

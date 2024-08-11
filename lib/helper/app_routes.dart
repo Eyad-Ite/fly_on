@@ -6,5 +6,6 @@ class AppRoutes {
   static const reviews = '/reviews';
   static const search = '/search' ;
   static const tripsAndFacilities = '/tripsAndFacilities' ;
+  static const facilityDetails = '/facilityDetails' ;
 
 }

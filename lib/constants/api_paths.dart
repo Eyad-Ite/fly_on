@@ -10,4 +10,9 @@ class ApiPaths {
   static const String tripDetailsUrl = 'trip/details';
   static const String addReviewUrl = 'comment/add';
   static const String deleteReviewUrl = 'comment/delete';
+  static const String addAppointmentUrl = 'appoint/appoint';
+  static const String facilityDetailsUrl = 'facility/details';
+  static const String addRateUrl = 'rate/add';
+  static const String deleteRateUrl = 'rate/delete';
+  static const String updateRateUrl = '/rate/update';
 }

@@ -17,4 +17,8 @@ class TripDetailsService {
     return await Api().post(url: ApiPaths.baseUrl + ApiPaths.deleteReviewUrl,body: {"id" : reviewId});
   }
 
+  Future<Response> addAppointment(String tripId,String numberOfPlaces) async {
+    return await Api().post(url: ApiPaths.baseUrl + ApiPaths.addAppointmentUrl,body: {"trip_id" : tripId,"number_of_places": numberOfPlaces});
+  }
+
 }
